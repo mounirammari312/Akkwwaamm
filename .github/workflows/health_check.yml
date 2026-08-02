@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-and-update:
-    runs-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -30,3 +30,4 @@ jobs:
           git add config.json
           git commit -m "Auto-update config.json [skip ci]" || exit 0
           git push
+

@@ -1,68 +1,44 @@
-
 {
-  "version": "1.2.0",
+  "version": "1.4.0",
   "last_updated": "2026-08-02",
   "providers": {
     "akwam": {
       "name": "أكوام",
       "is_active": true,
       "base_url": "https://ak.sv",
-      "referer_header": "https://ak.sv/",
-      "endpoints": {
-        "search": "/search?q="
-      },
+      "referer_header": "https://akwam.it/",
       "selectors": {
-        "card": "div.widget-body div.col-lg-2, div.entry-box",
-        "title": "h3, h2",
-        "poster": "img",
-        "link": "a",
+        "title": ".entry-title",
+        "link": ".entry-title a",
+        "poster": ".entry-image img",
         "download_btn": "a[href*='/download/']",
         "mp4_pattern": "\\.mp4"
       }
     }
   },
+  "pagination": {
+    "param": "page",
+    "initial_page": 1
+  },
   "categories": [
     {
-      "id": "movies_arabic",
-      "name": "أفلام عربية",
+      "id": "movies_all",
+      "name": "الأفلام",
       "type": "movie",
-      "endpoint": "/movies?category=arabic"
+      "endpoint": "/movies"
     },
     {
-      "id": "movies_foreign",
-      "name": "أفلام أجنبية",
-      "type": "movie",
-      "endpoint": "/movies?category=foreign"
-    },
-    {
-      "id": "movies_dubbed",
-      "name": "أفلام مدبلجة",
-      "type": "movie",
-      "endpoint": "/movies?category=dubbed"
-    },
-    {
-      "id": "series_arabic",
-      "name": "مسلسلات عربية",
+      "id": "series_all",
+      "name": "المسلسلات",
       "type": "series",
-      "endpoint": "/series?category=arabic"
+      "endpoint": "/series"
     },
     {
-      "id": "series_turkish",
-      "name": "مسلسلات تركية",
-      "type": "series",
-      "endpoint": "/series?category=turkish"
-    },
-    {
-      "id": "series_dubbed",
-      "name": "مسلسلات مدبلجة",
-      "type": "series",
-      "endpoint": "/series?category=dubbed"
-    },
-    {
-      "id": "anime_dubbed",
-      "name": "أنمي وكرتون مدبلج",
-      "type": "series",
-      "endpoint": "/anime?category=dubbed"
+      "id": "shows_all",
+      "name": "العروض والبرامج",
+      "type": "show",
+      "endpoint": "/shows"
     }
   ]
 }
+

@@ -4,7 +4,7 @@
   "providers": {
     "akwam": {
       "name": "أكوام",
-      "is_active": true,
+      "is_active": false,
       "base_url": "https://ak.sv",
       "search_endpoint": "/search?q=",
       "referer_header": "https://ak.sv/",

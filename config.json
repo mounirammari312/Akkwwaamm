@@ -1,20 +1,26 @@
 {
-  "version": "1.0.2",
+  "version": "1.1.0",
   "last_updated": "2026-08-02",
   "providers": {
     "akwam": {
       "name": "أكوام",
-      "is_active": false,
+      "is_active": true,
       "base_url": "https://ak.sv",
-      "search_endpoint": "/search?q=",
       "referer_header": "https://ak.sv/",
-      "test_imdb_id": "tt0816692",
+      "endpoints": {
+        "movies": "/movies",
+        "series": "/series",
+        "search": "/search?q="
+      },
       "selectors": {
-        "content_link": "a[href*='/movie/'], a[href*='/series/']",
-        "episode_link": "a[href*='/episode/']",
+        "card": "div.col-lg-2, div.entry-box, div.widget-body a.box",
+        "title": "h3, h2, .entry-title",
+        "poster": "img",
+        "link": "a",
         "download_btn": "a[href*='/download/']",
         "mp4_pattern": "\\.mp4"
       }
     }
   }
 }
+

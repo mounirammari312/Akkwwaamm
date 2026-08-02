@@ -1,5 +1,6 @@
+
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "last_updated": "2026-08-02",
   "providers": {
     "akwam": {
@@ -8,19 +9,60 @@
       "base_url": "https://ak.sv",
       "referer_header": "https://ak.sv/",
       "endpoints": {
-        "movies": "/movies",
-        "series": "/series",
         "search": "/search?q="
       },
       "selectors": {
-        "card": "div.col-lg-2, div.entry-box, div.widget-body a.box",
-        "title": "h3, h2, .entry-title",
+        "card": "div.widget-body div.col-lg-2, div.entry-box",
+        "title": "h3, h2",
         "poster": "img",
         "link": "a",
         "download_btn": "a[href*='/download/']",
         "mp4_pattern": "\\.mp4"
       }
     }
-  }
+  },
+  "categories": [
+    {
+      "id": "movies_arabic",
+      "name": "أفلام عربية",
+      "type": "movie",
+      "endpoint": "/movies?category=arabic"
+    },
+    {
+      "id": "movies_foreign",
+      "name": "أفلام أجنبية",
+      "type": "movie",
+      "endpoint": "/movies?category=foreign"
+    },
+    {
+      "id": "movies_dubbed",
+      "name": "أفلام مدبلجة",
+      "type": "movie",
+      "endpoint": "/movies?category=dubbed"
+    },
+    {
+      "id": "series_arabic",
+      "name": "مسلسلات عربية",
+      "type": "series",
+      "endpoint": "/series?category=arabic"
+    },
+    {
+      "id": "series_turkish",
+      "name": "مسلسلات تركية",
+      "type": "series",
+      "endpoint": "/series?category=turkish"
+    },
+    {
+      "id": "series_dubbed",
+      "name": "مسلسلات مدبلجة",
+      "type": "series",
+      "endpoint": "/series?category=dubbed"
+    },
+    {
+      "id": "anime_dubbed",
+      "name": "أنمي وكرتون مدبلج",
+      "type": "series",
+      "endpoint": "/anime?category=dubbed"
+    }
+  ]
 }
-

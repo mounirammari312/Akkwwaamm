@@ -1,5 +1,3 @@
-
-import datetime
 import json
 import urllib.parse
 import requests
@@ -20,7 +18,7 @@ def save_config(config_data):
 
 def run_health_check():
   print("==================================================")
-  print("🚀 بدء الفحص الآلي لمصادر البث (Direct Health Check)")
+  print("🚀 بدء الفحص الآلي لمصادر البث (Auto Health Check)")
   print("==================================================\n")
 
   config = load_config()
@@ -35,7 +33,7 @@ def run_health_check():
       res = requests.get(
           current_url, headers=headers, timeout=10, allow_redirects=True
       )
-      new_domain = "/".join(res.url.split("/")[:3])
+      new_domain = "/".join(res.url.split("/")[:3])  # استخراج Domain الأصلي
 
       if new_domain != current_url:
         print(f"   ⚠️ تم اكتشاف تغير الدومين: {current_url} ──► {new_domain}")
@@ -45,39 +43,36 @@ def run_health_check():
       else:
         print(f"   ✅ الدومين مستقر: {current_url}")
 
-      # 2️⃣ اختبار الكشط العملي المباشر من الكتالوج (بدون IMDb)
-      catalog_url = f"{current_url}/movies"
-      c_res = requests.get(catalog_url, headers=headers, timeout=10)
-      soup = BeautifulSoup(c_res.text, "html.parser")
+      # 2️⃣ اختبار الكشط العملي على IMDb ID افتراضي
+      imdb_id = provider["test_imdb_id"]
+      imdb_res = requests.get(
+          f"https://v2.sg.media-imdb.com/suggestion/t/{imdb_id}.json",
+          headers=headers,
+          timeout=8,
+      )
+      title = imdb_res.json()["d"][0]["l"]
 
-      # جلب أول فيلم من القائمة المباشرة
-      link = soup.select_one(provider["selectors"]["link"])
+      # البحث في الموقع
+      search_url = f"{current_url}{provider['search_endpoint']}{urllib.parse.quote(title)}"
+      s_res = requests.get(search_url, headers=headers, timeout=10)
+      soup = BeautifulSoup(s_res.text, "html.parser")
 
-      if link and link.get("href"):
+      link = soup.select_one(provider["selectors"]["content_link"])
+
+      if link:
+        # دخول صفحة العرض والتحميل
         target_page = link["href"]
-        if not target_page.startswith("http"):
-          target_page = f"{current_url}{target_page}"
-
-        # دخول صفحة الفيلم
         p_res = requests.get(target_page, headers=headers, timeout=10)
         p_soup = BeautifulSoup(p_res.text, "html.parser")
         dl_btn = p_soup.select_one(provider["selectors"]["download_btn"])
 
-        if dl_btn and dl_btn.get("href"):
-          dl_url = dl_btn["href"]
-          if not dl_url.startswith("http"):
-            dl_url = f"{current_url}{dl_url}"
-
-          # دخول صفحة التنزيل والاستخراج
-          dl_res = requests.get(dl_url, headers=headers, timeout=10)
+        if dl_btn:
+          dl_res = requests.get(dl_btn["href"], headers=headers, timeout=10)
           dl_soup = BeautifulSoup(dl_res.text, "html.parser")
           mp4_link = dl_soup.select_one('a[href*=".mp4"]')
 
           if mp4_link:
-            print(
-                "   ✅ اختبار الكشط المباشر نجح 100%! تم الوصول لرابط"
-                " MP4."
-            )
+            print("   ✅ اختبار الكشط نجح 100%! تم الوصول لرابط MP4.")
             provider["is_active"] = True
           else:
             print("   ❌ فشل العثور على زر MP4 المباشر.")
@@ -86,7 +81,7 @@ def run_health_check():
           print("   ❌ فشل الوصول لزر التحميل.")
           provider["is_active"] = False
       else:
-        print("   ❌ لم يظهر أي محتوى في كتالوج الأفلام.")
+        print("   ❌ لم يظهر أي محتوى في نتيجة البحث.")
         provider["is_active"] = False
 
     except Exception as e:
@@ -94,6 +89,8 @@ def run_health_check():
       provider["is_active"] = False
 
   # 3️⃣ حفظ الملف بعد التحديث
+  import datetime
+
   config["last_updated"] = datetime.date.today().strftime("%Y-%m-%d")
   save_config(config)
   print("\n💾 تم حفظ التحديثات في ملف config.json بنجاح!")
@@ -101,3 +98,4 @@ def run_health_check():
 
 if __name__ == "__main__":
   run_health_check()
+
